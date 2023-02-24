@@ -1,0 +1,8 @@
+
+probe begin{
+	print("== hello world ==\n")
+}
+
+probe end {
+	print (" == end == \n")
+}
