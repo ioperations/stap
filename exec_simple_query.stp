@@ -1,0 +1,7 @@
+probe process("/home/tablinux/DEV/bin/postgres").function("exec_simple_query").call {
+        // proc_name = @var("t_thrd") ->proc_cxt->MyProgName
+        query_string = $query_string
+        // printf("procname 5s")
+        printf("query_string '%s' \n", user_string(query_string))
+        print_ubacktrace()
+    }

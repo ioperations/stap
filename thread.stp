@@ -1,4 +1,5 @@
-probe process("/home/tablinux/stap/thread_local_test").function("exec_simple_query").call {
+probe process("/home/tablinux/stap/thread_local_test").function("exec_simple_query").call ,
+process("/home/tablinux/stap/thread_local_test").function("exec_simple_query").return {
 	my_threadname = @var("t_thrd")->MyProcName
     my_threadid = @var("t_thrd")->id
 	printf("process name %s \n", user_string(my_threadname))

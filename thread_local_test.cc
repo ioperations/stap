@@ -17,9 +17,10 @@ void exec_simple_query() {
     printf("%s\n", t_thrd.MyProcName);
   }
 }
+
 int main() {
   t_thrd.id = 100;
-  strncpy(t_thrd.MyProcName, "test_thread_local", 9);
+  strncpy(t_thrd.MyProcName, "test_thread_local", 99);
   exec_simple_query();
   exec_simple_query();
 }

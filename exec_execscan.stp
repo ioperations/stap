@@ -1,0 +1,10 @@
+global sql 
+
+probe process("/home/tablinux/DEV/bin/postgres").function("exec_simple_query").call {
+        sql = $query_string
+}
+
+probe process("/home/tablinux/DEV/bin/postgres").function("ExecScan").call {
+        printf("query_string '%s' \n", user_string(sql))
+        print_ubacktrace()
+}
