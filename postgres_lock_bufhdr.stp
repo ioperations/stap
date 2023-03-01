@@ -1,0 +1,9 @@
+
+
+probe process("/home/tablinux/DEV/bin/postgres").function("LockBufHdr").call {
+        sql = @var("debug_query_string");
+        if (sql)
+            printf("sql is '%s' \n", user_string(sql))
+        print_ubacktrace()
+}
+
