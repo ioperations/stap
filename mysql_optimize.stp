@@ -1,0 +1,17 @@
+
+probe begin {
+    print (" == begin == \n")
+}
+
+probe process("/home/tablinux/DEV/bin/mysqld").function("mysql_execute_command").call {
+        //sql = @cast($thd,"THD", "/home/tablinux/Github/mysql-server/sql/sql_class.h")->m_normalized_query->m_ptr
+        // printf("vars  is '%s' \n", $$vars$)
+        // printf("params is '%s' \n ", $$parms$)
+        sql = $thd->m_query_string->str
+        printf("sql is '%s' \n", user_string(sql))
+}
+
+probe process("/home/tablinux/DEV/bin/mysqld").function("JOIN::optimize").call {
+    print_ubacktrace()
+}
+
