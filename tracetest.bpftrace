@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+sudo bpftrace -e 'usdt:/home/tablinux/stap/tracetest:testprobe { printf("%d: time is %d\n", pid, arg0); }'
