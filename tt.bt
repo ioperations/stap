@@ -1,0 +1,20 @@
+
+/*
+```rust
+    // src/main.rs
+    fn hello(z: i32, q: i32) -> i32 {
+        z + q
+    }
+    
+    fn main() {
+        let ret = hello(1, 2);
+        println!("Hello, world! , {ret}");
+    }
+```
+*/
+
+uprobe:/home/tablinux/Github/tt/target/debug/tt:_ZN2tt5hello17h11fa6f768bc5bd3bE {
+        printf("arg0 is %d, arg1 is %d\n ", arg0 , arg1);
+        exit()
+}
+
