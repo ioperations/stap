@@ -1,0 +1,11 @@
+#!/usr/bin/env bpftrace
+
+struct t {
+    const char * * z;
+}
+
+uprobe:/home/tablinux/stap/three_dimentional_array:fun {
+    $s = (struct t*) arg0;
+    printf("val: %s\n", str($s->z[0]));
+    printf("%s\n", str(arg1));
+}
