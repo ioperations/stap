@@ -1,17 +1,19 @@
 #!/bin/bash 
-
 #  stap -gu -c ./cc_deref cc_deref.stp -gu参数，这个参数是嵌入C代码必须的参数
 
-sudo stap -gu -e '
-
-function deref:long(ptr:long)
-%{
-    STAP_RETURN(*(char **)STAP_ARG_ptr); 
-%}
-
+sudo stap -e '
 probe begin {
-printf("hello\n")
+    printf("hello\n")
 }
+
+// probe process("'${PWD}'/multi_pointer_deref").function("func").call
+// {
+//       printf("-------------------------------------------------------------\n");
+//       printf("$$parms: %s\n", $$parms);
+//       printf("$$locals: %s\n", $$locals);
+//       printf("$$vars: %s\n", $$vars);
+// }
+// 
 //  
 //  probe process("'${PWD}'/multi_pointer_deref").function("func").call
 //  {
@@ -38,7 +40,8 @@ printf("hello\n")
 //  }
 // 
 // 
-probe process("'${PWD}'/multi_pointer_deref").provider("m").mark("func"){
+
+probe process("'${PWD}'/multi_pointer_deref").provider("prov").mark("mark"){
     printf("%s %p\n",user_string($arg1), $arg2)
 }
 '

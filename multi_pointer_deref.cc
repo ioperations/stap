@@ -9,11 +9,11 @@ struct test {
     int b;
 };
 
-static void func(const char* pstr,const char** ppstr, struct test* pt,
+void func(const char* pstr,const char** ppstr, struct test* pt,
                  struct test** ppt, struct test*** pppt) {
     printf("pstr: %s, *ppstr: %s\n", pstr, *ppstr);
     std::string s (pstr);
-    STAP_PROBE2(m, func, s.c_str(), pstr);
+    STAP_PROBE2(prov, mark, s.c_str(), pstr);
     printf("pt->a: %s, pt->b: %d: \n", pt->a, pt->b);
     printf("(*ppt)->a: %s, (*ppt)->b: %d: \n", (*ppt)->a, (*ppt)->b);
     printf("(**pppt)->a: %s, (**pppt）->b: %d: \n", (**pppt)->a, (**pppt)->b);
