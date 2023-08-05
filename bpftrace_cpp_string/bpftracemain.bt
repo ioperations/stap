@@ -1,0 +1,8 @@
+#include "struct.h"
+
+u:./main:_Z1TRKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE  
+{
+    printf("%s \n", str(((struct basic_string*)arg0)->_M_dataplus._M_p));
+}
+
+

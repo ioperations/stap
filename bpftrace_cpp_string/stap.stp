@@ -1,0 +1,8 @@
+#!/usr/bin/env stap
+
+
+probe process("./main").function("T").call { 
+    printf(" %s\n ",user_string($tt->_M_dataplus->_M_p))
+}
+
+probe begin { printf("begin\n")}
