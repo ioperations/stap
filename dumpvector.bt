@@ -3,19 +3,23 @@
 u:./dump_vector:_Z10DumpVectorRSt6vectorIiSaIiEE {
     $max_vector_dump_num = 10;
     $a = 0;
+    // 下面的这些纸短是从clayout中得到的，clayout是一个很好的工具，可以用来查看内存布局
     $start = ((struct vector*)arg0)->__parent0._M_impl.__parent1._M_start;
     $end = ((struct vector*)arg0)->__parent0._M_impl.__parent1._M_finish;
 
     
     printf("{");
     while ( $a < $max_vector_dump_num ){
+      // 根据vector的实现，当start大于等于end的时候，说明要越界了。
       if ($start >= $end ){
         break;
       }
       printf("%d, ", *$start);
+      // 指针加1代表加 sizeof(int) 的长度，这里vecotr的模版参数是int,如果是long，那么就加sizeof(long)
       $start += 1 ; // point += 1 ==> point += sizeof(type of *point)
+
       $a +=1;
     }
-    printf("}\n");
+    printf("}\n"); // '\n'告诉printf要flush一下
     
 }
