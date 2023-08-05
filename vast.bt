@@ -1,16 +1,16 @@
-uprobe:/home/tablinux/stap/vast:_ZN4vast7resolveERKiS1_ {
+uprobe:./vast:_ZN4vast7resolveERKiS1_ {
     printf("arg1 is %d, arg2 is %d \n", *arg1 , *arg2 );
 }
 
-uretprobe:/home/tablinux/stap/vast:_ZN4vast7resolveEi {
+uretprobe:./vast:_ZN4vast7resolveEi {
     printf("retval %d\n", retval );
 }
 
-uprobe:/home/tablinux/stap/vast:_Z5helloii {
+uprobe:./vast:_Z5helloii {
     printf("arg0 is %d , arg1 is %d \n", arg0 , arg1);
 }
 
-uretprobe:/home/tablinux/stap/vast:_Z5helloii {
+uretprobe:./vast:_Z5helloii {
     printf("retval %d\n", retval );
     exit()
 }

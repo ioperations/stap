@@ -1,0 +1,4 @@
+uprobe:./rust:_ZN4rust5hello17h4e352caf1741aaddE {
+        printf("arg0 is %d, arg1 is %d\n ", arg0 , arg1);
+}
+
