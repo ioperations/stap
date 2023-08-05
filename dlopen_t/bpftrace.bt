@@ -1,0 +1,4 @@
+u:./libcount.so:_Z3getv { 
+    printf("called\n")
+  }
+
