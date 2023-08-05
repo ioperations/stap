@@ -22,17 +22,13 @@ asm_target=$(srcs:.cc=.s)
 CXX ?= g++
 CPPFLAGS += -g
 
-default: $(target) rust bpftrace_cpp_string dlopen_t
+default: $(target) rust 
 	$(info ${ccgreen} ok ${ccwhite})
+	make -C bpftrace_cpp_string 
+	make -C dlopen_t
 
 rust:rust.rs 
 	rustc $< -o $@
-
-bpftrace_cpp_string:
-	make -C bpftrace_cpp_string
-
-dlopen_t:
-	make -C dlopen_t
 
 %:%.cc
 	${CXX} $< ${CPPFLAGS} -o $@
