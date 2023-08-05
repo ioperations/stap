@@ -1,0 +1,21 @@
+#include "struct.h"
+
+u:./dump_vector:_Z10DumpVectorRSt6vectorIiSaIiEE {
+    $max_vector_dump_num = 10;
+    $a = 0;
+    $start = ((struct vector*)arg0)->__parent0._M_impl.__parent1._M_start;
+    $end = ((struct vector*)arg0)->__parent0._M_impl.__parent1._M_finish;
+
+    
+    printf("{");
+    while ( $a < $max_vector_dump_num ){
+      if ($start >= $end ){
+        break;
+      }
+      printf("%d, ", *$start);
+      $start += 1 ; // point += 1 ==> point += sizeof(type of *point)
+      $a +=1;
+    }
+    printf("}\n");
+    
+}

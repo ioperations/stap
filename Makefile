@@ -22,7 +22,7 @@ asm_target=$(srcs:.cc=.s)
 CXX ?= g++
 CPPFLAGS += -g
 
-default: $(target) rust 
+default: $(target) rust gen_dumpvector
 	$(info ${ccgreen} ok ${ccwhite})
 	make -C bpftrace_cpp_string 
 	make -C dlopen_t
@@ -33,7 +33,10 @@ rust:rust.rs
 %:%.cc
 	${CXX} $< ${CPPFLAGS} -o $@
 
+gen_dumpvector:dump_vector
+	clayout -i dump_vector -o struct vector
+
 clean:
-	-rm ${target} a.out rust
+	-rm ${target} a.out rust struct.h struct.c
 	make -C bpftrace_cpp_string clean 
 	make -C dlopen_t clean 
