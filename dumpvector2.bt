@@ -1,0 +1,11 @@
+#include "dumpvector2_clayout.h"
+
+// we know that c++ reference is implementad using pointer in c language's view
+//    caller called the function with pointer and the callee first dereference
+//        the input pointer ,and then execute the function 
+u:./dumpvector2:_Z5PrintIiEvRP8TreeNodeIT_E {
+        $root= (*(struct TreeNode**)arg0);
+        if($root != 0) {
+            printf("%d\n", $root->val);
+        }
+}

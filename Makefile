@@ -22,7 +22,7 @@ asm_target=$(srcs:.cc=.s)
 CXX ?= g++
 CPPFLAGS += -g
 
-default: $(target) rust gen_dumpvector
+default: $(target) rust gen_dumpvector gen_dumpvector2
 	$(info ${ccgreen} ok ${ccwhite})
 	make -C bpftrace_cpp_string 
 	make -C dlopen_t
@@ -36,7 +36,10 @@ rust:rust.rs
 gen_dumpvector:dump_vector
 	clayout -i dump_vector -o struct vector
 
+gen_dumpvector2:dumpvector2
+	clayout -i dumpvector2 -o dumpvector2_clayout TreeNode
+
 clean:
-	-rm ${target} a.out rust struct.h struct.c
+	-rm ${target} a.out rust struct.h struct.c dumpvector2_clayout*
 	make -C bpftrace_cpp_string clean 
 	make -C dlopen_t clean 
