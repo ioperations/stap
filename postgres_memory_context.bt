@@ -1,0 +1,31 @@
+#include "./postgres_memory_context_clayout.h"
+
+u:/usr/lib/postgresql/15/bin/postgres:MemoryContextAllocZero {
+     $top = (struct MemoryContextData*)arg0;
+     $count=0;
+     while ($count < 10){
+       if ( $top->parent == 0 ){
+         break;
+       }
+       $top = (struct MemoryContextData*)$top->parent;
+       $count +=1;
+     }
+     if( $top != 0 ){
+        printf("%s: %d\n", str($top->name), $top->mem_allocated);
+        if( $top->firstchild != 0 ){
+          $sub_head = (struct MemoryContextData*)$top->firstchild;
+          $count1= 0 ;
+          while ($count1 < 50){
+            if ($sub_head == 0 ){
+              break;
+            }
+            printf("(%s:%d) -> ", str($sub_head->name), $sub_head->mem_allocated);
+            $sub_head = (struct MemoryContextData*)$sub_head->nextchild;
+
+            $count1 += 1;
+          }
+        }
+     }
+     printf("\n\n");
+}
+
