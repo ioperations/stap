@@ -20,7 +20,12 @@ main:main.cc
 main.debug:main 
 	objcopy --only-keep-debug main main.debug
 	objcopy --strip-debug main
+	strip main
 	objcopy --add-gnu-debuglink=main.debug main
+
+
+show_debug_info:main
+	readelf --string-dump=.gnu_debuglink main
 
 generate_clyout_file:main.debug 
 	clayout -i main.debug -o struct Dummy
