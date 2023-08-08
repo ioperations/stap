@@ -1,20 +1,19 @@
 #include "./lru_clayout.h"
 
 uprobe:./lru:_ZN8LRUCacheIiiE3GetERKi{
-         $head = ((struct LRUCache*)arg0)->head;
-         $tail = ((struct LRUCache*)arg0)->tail;
-         printf("capability %d\n", ((struct LRUCache*)arg0)->capability);
+    $head = ((struct LRUCache*)arg0)->head;
+    $tail = ((struct LRUCache*)arg0)->tail;
+    printf("capability %d\n", ((struct LRUCache*)arg0)->capability);
 
-         $a=0;
-         while ($a < 10){
-           $head = (struct Node*) (*((uint64 *) $head->__unknown_type1));
+    $count=0;
+    while ($count < 10){
+        $head = (struct Node*) (*((uint64 *) $head->__unknown_type1));
 
-           if ($head == $tail){
-             break;
-           }
-           printf("(%d,%d) -> ",$head->key, $head->value );
-           $a+=1;
-         }
-         printf("\n");
-
-       }
+        if ($head == $tail){
+          break;
+        }
+        printf("(%d,%d) -> ",$head->key, $head->value );
+        $count+=1;
+    }
+    printf("\n");
+} 
