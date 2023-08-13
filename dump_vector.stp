@@ -1,0 +1,21 @@
+
+probe begin {
+    printf("begin \n" )
+}
+
+probe process("./dump_vector").function("DumpVector").call {
+
+    start = $vec->_M_impl->_M_start
+    end = $vec->_M_impl->_M_finish
+
+    printf("{")
+    for(i = 0 ; i < 10 ; ++i){
+        if ( start >= end ){
+            break;
+        }
+        printf("%d, ", @cast(start,"int")[0])
+        start = start + 4;
+    }
+    printf("}\n")
+
+}
