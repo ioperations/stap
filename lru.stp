@@ -1,0 +1,24 @@
+global odds
+probe begin {
+    printf( "probe begin\n");
+    
+}
+
+probe process("./lru").function("Get").call{
+    head = $this->head
+    tail = $this->tail 
+
+    for (i = 0 ; i < 10 ; ++i ){
+        head = head->next;
+        if ( head == tail ){
+            break;
+        }
+        odds <<< head->key
+        printf("(%d, %d)-> ", head->key , head->value)
+    }
+    printf("\n")
+}
+
+probe end {
+    print(@hist_linear(odds, 0, 10 ,1 ))
+}

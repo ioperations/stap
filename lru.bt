@@ -12,6 +12,7 @@ uprobe:./lru:_ZN8LRUCacheIiiE3GetERKi{
         if ($head == $tail){
           break;
         }
+        @ = lhist($head->key, 0 , 10 ,1);
         printf("(%d,%d) -> ",$head->key, $head->value );
         $count+=1;
     }
