@@ -1,6 +1,6 @@
 #!/usr/bin/stap
 
-probe process("./lru").function("Get").call {
+probe process("./lru").function("_ZN8LRUCacheIiiE3GetERKi").call {
     printf("rip %d,rdi %d,rsi %d\n", register("rip"), register("rdi"), register("rsi"))
     addr = @cast(register("rsi"),"int32_t", "kernel<linux/types.h>")[0]
     printf("arg0 is 'this' pointer, arg1 is %d\n", addr)
