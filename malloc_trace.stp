@@ -1,0 +1,59 @@
+#!/usr/bin/stap
+
+global memory_allocated;
+global memory_freed;
+global reqs;
+
+
+probe process("/lib/libc.so.6").function("malloc").call {
+    if (execname() == "hashmap_memusag"){
+        req = register("rdi");
+        reqs = req;
+    }
+}
+
+probe process("/lib/libc.so.6").function("malloc").return{
+    if (execname() == "hashmap_memusag"){
+        ret = register("rax");
+        if (ret != 0){
+            allocated = @cast(ret - 8, "uint64_t", "kernel<linux/types.h>") - 1 ;
+            memory_allocated[allocated] <<< reqs;
+            memory_occupid += allocated;
+        }
+    }
+}
+
+probe process("lib/libc.so.6").function("free").call {
+    if (execname() == "hashmap_memusag"){
+        req = register("rdi");
+        if (ret != 0){
+            freed = @cast(ret - 8, "uint64_t", "kernel<linux/types.h>") - 1 ;
+            memory_freed[freed] <<< freed;
+            memory_occupid -= freed;
+        }
+    }
+
+}
+
+probe begin{
+    printf("start monitoring memory allocation request...\n");
+}
+
+probe end{
+
+    printf("memory malloced....\n");
+
+    foreach(malloc+ in memory_allocated){
+        printf("memory_allocated[%9d] => min: %9d, max: %9d, count: %9d,", malloc, @min(memory_allocated[malloc]),
+                                    @max(memory_allocated[malloc]),@count(memory_allocated[malloc]));
+
+    }
+
+    printf("memory freed....\n");
+    foreach(malloc+ in memory_freed){
+        printf("memory_freed[%9d] => min: %9d, max: %9d, count: %9d,", malloc, @min(memory_freed[malloc]),
+                                    @max(memory_freed[malloc]),@count(memory_freed[malloc]));
+
+    }
+
+}
