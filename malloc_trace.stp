@@ -6,30 +6,34 @@ global reqs;
 
 
 probe process("/lib/libc.so.6").function("malloc").call {
-    if (execname() == "hashmap_memusag"){
+    if (execname() == "hashmap_memoryu"){
         req = register("rdi");
-        reqs = req;
+        // printf("req is %d\n", req);
+        reqs = req; //(req + 15) & ~(15);
     }
 }
 
-probe process("/lib/libc.so.6").function("malloc").return{
-    if (execname() == "hashmap_memusag"){
-        ret = register("rax");
+probe process("/lib/libc.so.6").function("malloc").return {
+    if (execname() == "hashmap_memoryu"){
+        ret = register("rax") ;
+        z = ret - 8 ;
         if (ret != 0){
-            allocated = @cast(ret - 8, "uint64_t", "kernel<linux/types.h>") - 1 ;
+            allocated = @cast(z , "uint64_t", "kernel<linux/types.h>") - 1 ;
             memory_allocated[allocated] <<< reqs;
             memory_occupid += allocated;
         }
     }
 }
 
-probe process("lib/libc.so.6").function("free").call {
-    if (execname() == "hashmap_memusag"){
-        req = register("rdi");
+probe process("/lib/libc.so.6").function("free").call {
+    if (execname() == "hashmap_memoryu"){
+        ret = register("rdi");
+        z = ret - 8;
+        // printf("ret is %d\n", ret);
         if (ret != 0){
-            freed = @cast(ret - 8, "uint64_t", "kernel<linux/types.h>") - 1 ;
-            memory_freed[freed] <<< freed;
-            memory_occupid -= freed;
+          freed = @cast(z, "uint64_t", "kernel<linux/types.h>") - 1 ;
+          memory_freed[freed] <<< freed;
+          memory_occupid -= freed;
         }
     }
 
@@ -44,7 +48,7 @@ probe end{
     printf("memory malloced....\n");
 
     foreach(malloc+ in memory_allocated){
-        printf("memory_allocated[%9d] => min: %9d, max: %9d, count: %9d,", malloc, @min(memory_allocated[malloc]),
+        printf("memory_allocated[%9d] => min: %9d, max: %9d, count: %9d\n", malloc, @min(memory_allocated[malloc]),
                                     @max(memory_allocated[malloc]),@count(memory_allocated[malloc]));
 
     }

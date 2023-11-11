@@ -1,0 +1,26 @@
+#!/usr/bin/bpftrace
+uprobe:/lib/libc.so.6:malloc { 
+    if (strncmp("hashmap_memoryu", comm , 7) == 0){
+         @req = arg0;
+    }
+}
+
+uretprobe:/lib/libc.so.6:malloc { 
+    if (strncmp("hashmap_memoryu", comm , 7) == 0){
+         $allocated = *(uint64*)(retval-8) -1 ;
+         @memory_allocated[$allocated] = stats(@req);
+         @memory_occupid += $allocated ;
+    }
+}
+
+uprobe:/lib/libc.so.6:free { 
+    if (strncmp("hashmap_memoryu", comm , 7) == 0){
+         $freed = *(uint64*)(arg0 - 8) -1 ;
+         @memory_freed[$freed] = stats($freed);
+         @memory_occupid -= $freed;
+    }
+}
+
+interval:ms:50 {
+    printf("%d,", @memory_occupid);
+}
