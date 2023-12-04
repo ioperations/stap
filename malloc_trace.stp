@@ -18,7 +18,7 @@ probe process("/lib/libc.so.6").function("malloc").return {
         ret = register("rax") ;
         z = ret - 8 ;
         if (ret != 0){
-            allocated = @cast(z , "uint64_t", "kernel<linux/types.h>") - 1 ;
+            allocated = @uderef(8,z) -1 ;
             memory_allocated[allocated] <<< reqs;
             memory_occupid += allocated;
         }
@@ -31,7 +31,7 @@ probe process("/lib/libc.so.6").function("free").call {
         z = ret - 8;
         // printf("ret is %d\n", ret);
         if (ret != 0){
-          freed = @cast(z, "uint64_t", "kernel<linux/types.h>") - 1 ;
+          freed = @cast(8, z) - 1; 
           memory_freed[freed] <<< freed;
           memory_occupid -= freed;
         }
@@ -55,7 +55,7 @@ probe end{
 
     printf("memory freed....\n");
     foreach(malloc+ in memory_freed){
-        printf("memory_freed[%9d] => min: %9d, max: %9d, count: %9d,", malloc, @min(memory_freed[malloc]),
+        printf("memory_freed[%9d] => min: %9d, max: %9d, count: %9d\n", malloc, @min(memory_freed[malloc]),
                                     @max(memory_freed[malloc]),@count(memory_freed[malloc]));
 
     }
