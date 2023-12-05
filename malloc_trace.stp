@@ -31,7 +31,7 @@ probe process("/lib/libc.so.6").function("free").call {
         z = ret - 8;
         // printf("ret is %d\n", ret);
         if (ret != 0){
-          freed = @cast(8, z) - 1; 
+          freed = @uderef(8, z) - 1; 
           memory_freed[freed] <<< freed;
           memory_occupid -= freed;
         }
